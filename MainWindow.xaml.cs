@@ -18,7 +18,13 @@ namespace Write
     {
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
+
+        private void cmdCreate_Click(object sender, RoutedEventArgs e)
+        {
+            Window1 win1 = new Window1();
+            win1.Show();
+        }        
     }
 }

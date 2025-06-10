@@ -7,8 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Background="#FF191919">
-        <Rectangle HorizontalAlignment="Left" Height="100" Margin="93,296,0,0" Stroke="Black" VerticalAlignment="Top" Width="100" Fill="#FF313131"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="312,101,0,0" VerticalAlignment="Top"/>
+        <Canvas Margin="670,50,30,313" Background="#FF272727"/>
+        <Button x:Name="cmdCreate" Content="Create" HorizontalAlignment="Center" Canvas.Left="26" Canvas.Top="10" VerticalAlignment="Top" Width="48" Margin="0,158,0,0" Click="cmdCreate_Click"/>
+        <Button x:Name="cmdLoad" Content="Load" Canvas.Left="26" Canvas.Top="54" HorizontalAlignment="Center" VerticalAlignment="Center" Width="48"/>
 
     </Grid>
 </Window>

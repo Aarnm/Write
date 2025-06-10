@@ -10,5 +10,4 @@ namespace Write
     public partial class App : Application
     {
     }
-
 }
