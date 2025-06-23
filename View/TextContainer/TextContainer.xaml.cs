@@ -13,21 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Write.View.UserControls
+namespace Write.View.TextContainer
 {
     /// <summary>
-    /// Interaction logic for MenuBar.xaml
+    /// Interaction logic for TextContainer.xaml
     /// </summary>
-    public partial class MenuBar : UserControl
+    public partial class TextContainer : UserControl
     {
-        public MenuBar()
+        public TextContainer()
         {
             InitializeComponent();
-        }
-
-        private void cmbFont_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
     }
 }

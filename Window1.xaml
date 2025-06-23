@@ -4,15 +4,141 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Write"
-        xmlns:userControls="clr-namespace:Write.View.UserControls"
         mc:Ignorable="d"
         Title="Window1" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="46"/>
             <RowDefinition/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <userControls:MenuBar />
+
+        <!-- Menu -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="2"/>
+                <RowDefinition Height="2"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="2"/>
+            </Grid.RowDefinitions>
+            <Menu>
+                <MenuItem Header="File" FontSize="14">
+
+                </MenuItem>
+                <MenuItem Header="Edit" FontSize="14">
+
+                </MenuItem>
+            </Menu>
+            <Rectangle Grid.Row="1" Fill="#FF404040"/>
+            <Rectangle Grid.Row="2" Fill="Gray"/>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition MinWidth="10" MaxWidth="1000000"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="0" Fill="Gray"/>
+                <Rectangle Grid.Column="1" Fill="blue"/>
+                <Rectangle Grid.Column="2" Fill="Gray"/>
+                <Rectangle Grid.Column="3" Fill="blue"/>
+                <Rectangle Grid.Column="4" Fill="Gray"/>
+                <Rectangle Grid.Column="5" Fill="blue"/>
+                <Rectangle Grid.Column="6" Fill="Gray"/>
+                <Rectangle Grid.Column="7" Fill="blue"/>
+                <Rectangle Grid.Column="8" Fill="Gray"/>
+                <Rectangle Grid.Column="9" Fill="blue"/>
+                <Rectangle Grid.Column="10" Fill="Gray"/>
+                <Rectangle Grid.Column="11" Fill="blue"/>
+                <Rectangle Grid.Column="12" Fill="Gray"/>
+
+                <ComboBox Name="cmbFont" Grid.Column="1" SelectedIndex="0" FontFamily="MS Gothic" SelectionChanged="cmbFont_SelectionChanged" Focusable="False">
+                    <Label Content="MS Gothic" FontFamily="MS Gothic"/>
+                    <Label Content="Arial" FontFamily="Arial"/>
+                    <Label Content="Calibri Light" FontFamily="Calibri Light"/>                    
+                </ComboBox>
+
+                <Grid Grid.Column="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Name="txtFontSize" Text="10000" FontFamily="MS Gothic" UndoLimit="50" LostFocus="txtFontSize_LostFocus" KeyDown="txtFontSize_KeyDown"/>
+                    <Button Name="cmdPlusFont" Grid.Column="1" Content="+" FontFamily="MS Gothic" Click="cmdPlusFont_Click" Focusable="False"/>
+                    <Button Name="cmdMinusFont" Grid.Column="2" Content="-" FontFamily="MS Gothic" Click="cmdMinusFont_Click" Focusable="False"/>
+                </Grid>
+                
+
+                <Grid Grid.Column="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Background="Black" FontFamily="MS Gothic" Focusable="False"/>
+                    <Button Grid.Column="1" Background="Blue" FontFamily="MS Gothic" Focusable="False"/>
+                    <Button Grid.Column="2" Background="Red" FontFamily="MS Gothic" Focusable="False"/>
+                    <Button Grid.Column="3" Content="..." FontFamily="MS Gothic" Focusable="False"/>
+                </Grid>
+
+                <Grid Grid.Column="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="A" FontFamily="MS Gothic" Focusable="False"/>
+                    <Button Grid.Column="1" Content="a" FontFamily="MS Gothic" Focusable="False"/>
+                </Grid>
+
+                <Grid Grid.Column="9">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="B" FontFamily="MS Gothic" FontWeight="Bold" Focusable="False"/>
+                    <Button Grid.Column="1" Content="I" FontFamily="MS Gothic" FontStyle="Italic" Focusable="False"/>
+                    <Button Grid.Column="2" Content="U" FontFamily="MS Gothic" Focusable="False"/>
+                </Grid>
+
+                <Grid Grid.Column="11">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="&lt;" FontFamily="MS Gothic" Focusable="False"/>
+                    <Button Grid.Column="1" Content="-" FontFamily="MS Gothic" Focusable="False"/>
+                    <Button Grid.Column="2" Content=">" FontFamily="MS Gothic" Focusable="False"/>
+                </Grid>
+            </Grid>
+            <Rectangle Grid.Row="4" Fill="Gray"/>
+        </Grid>
+
+        <!-- Texto -->
+        <Grid Grid.Row="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="1000"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <RichTextBox Name="txtText" Grid.Column="1" Foreground="White" Background="#FF292929" AcceptsTab="True" AcceptsReturn="True" FontSize="18" FontFamily="MS Gothic" LostFocus="txtText_LostFocus" AutoWordSelection="False"/>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Window>
