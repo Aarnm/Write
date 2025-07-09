@@ -87,10 +87,10 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Background="Black" FontFamily="MS Gothic" Focusable="False"/>
-                    <Button Grid.Column="1" Background="Blue" FontFamily="MS Gothic" Focusable="False"/>
-                    <Button Grid.Column="2" Background="Red" FontFamily="MS Gothic" Focusable="False"/>
-                    <Button Grid.Column="3" Content="..." FontFamily="MS Gothic" Focusable="False"/>
+                    <Button Name="cmdColorWhite" Grid.Column="0" Background="White" FontFamily="MS Gothic" Click="cmdColorChange_Click" Focusable="False"/>
+                    <Button Name="cmdColorBlack" Grid.Column="1" Background="Black" FontFamily="MS Gothic" Click="cmdColorChange_Click" Focusable="False"/>
+                    <Button Name="cmdColorRed" Grid.Column="2" Background="Red" FontFamily="MS Gothic" Click="cmdColorChange_Click" Focusable="False"/>
+                    <Button Name="cmdColors" Grid.Column="3" Content="..." FontFamily="MS Gothic" Focusable="False"/>
                 </Grid>
 
                 <Grid Grid.Column="7">

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,51 +29,49 @@ namespace Write
             txtFontSize.Text = txtText.FontSize.ToString();
         }
 
-        private void IncreaseSelectedFontSizes(double amount)
-        {
-            TextPointer start = txtText.Selection.Start;
-            TextPointer end = txtText.Selection.End;
+        //private void IncreaseSelectedFontSizes(double amount)
+        //{
+        //    TextPointer start = txtText.Selection.Start;
+        //    TextPointer end = txtText.Selection.End;
 
-            TextPointer pointer = start;
+        //    TextPointer pointer = start;
 
-            while (pointer != null && pointer.CompareTo(end) < 0)
-            {
-                if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
-                {
-                    string text = pointer.GetTextInRun(LogicalDirection.Forward);
-                    TextPointer next = pointer.GetPositionAtOffset(text.Length);
+        //    while (pointer != null && pointer.CompareTo(end) < 0)
+        //    {
+        //        if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+        //        {
+        //            string text = pointer.GetTextInRun(LogicalDirection.Forward);
+        //            TextPointer next = pointer.GetPositionAtOffset(text.Length);
 
-                    // Create a range over this text segment
-                    TextRange range = new TextRange(pointer, next);
+        //            // Create a range over this text segment
+        //            TextRange range = new TextRange(pointer, next);
 
-                    object currentSize = range.GetPropertyValue(TextElement.FontSizeProperty);
-                    double size;
+        //            object currentSize = range.GetPropertyValue(TextElement.FontSizeProperty);
+        //            double size;
 
-                    if (currentSize != DependencyProperty.UnsetValue && double.TryParse(currentSize.ToString(), out size))
-                    {
-                        size += amount;                        
-                    }
-                    else
-                    {
-                        size = 12;
-                    }
+        //            if (currentSize != DependencyProperty.UnsetValue && double.TryParse(currentSize.ToString(), out size))
+        //            {
+        //                size += amount;                        
+        //            }
+        //            else
+        //            {
+        //                size = 12;
+        //            }
 
-                    range.ApplyPropertyValue(TextElement.FontSizeProperty, size);
+        //            range.ApplyPropertyValue(TextElement.FontSizeProperty, size);
 
-                    pointer = next;
-                }
-                else
-                {
-                    pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
-                }
-            }
-        }
+        //            pointer = next;
+        //        }
+        //        else
+        //        {
+        //            pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
+        //        }
+        //    }
+        //}
 
         private void txtText_LostFocus(object sender, RoutedEventArgs e)
         {
-            selectedText = txtText.Selection;            
-
-            //MessageBox.Show(selectedText.Text);
+            selectedText = txtText.Selection;                        
         }
 
         private void cmbFont_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -195,6 +194,7 @@ namespace Write
             }
         }
         
+        //Change size in textbox
         private void txtFontSize_LostFocus(object sender, RoutedEventArgs e)
         {
             if (!selectedText.IsEmpty)
@@ -216,6 +216,53 @@ namespace Write
                     {
                         selectedText.ApplyPropertyValue(TextElement.FontSizeProperty, txtFontSize.Text);                        
                     }
+                }
+            }
+        }
+
+        //Colors
+        private void cmdColorChange_Click(object sender, RoutedEventArgs e)
+        {
+            TextPointer start = txtText.Selection.Start;
+            TextPointer end = txtText.Selection.End;
+
+            TextPointer pointer = start;
+
+            while (pointer != null && pointer.CompareTo(end) < 0)
+            {
+                if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                {
+                    string text = pointer.GetTextInRun(LogicalDirection.Forward);
+                    TextPointer next = pointer.GetPositionAtOffset(text.Length);
+
+                    // Create a range over this text segment
+                    TextRange range = new TextRange(pointer, next);
+                    
+                    object color = new SolidColorBrush(Colors.Black);
+
+                    if (sender.Equals(cmdColorWhite))
+                        color = new SolidColorBrush(Colors.White);
+                    else if (sender.Equals(cmdColorBlack))
+                        color = new SolidColorBrush(Colors.Black);
+                    else if (sender.Equals(cmdColorRed))
+                        color = new SolidColorBrush(Colors.Red);
+
+                    //if (color != DependencyProperty.UnsetValue)
+                    //{
+                    //    size -= 2;
+                    //}
+                    //else
+                    //{
+                    //    size = 1;
+                    //}
+
+                    range.ApplyPropertyValue(TextElement.ForegroundProperty, color);
+
+                    pointer = next;
+                }
+                else
+                {
+                    pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
                 }
             }
         }
