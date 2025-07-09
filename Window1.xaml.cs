@@ -124,7 +124,10 @@ namespace Write
                     if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
                     {
                         string text = pointer.GetTextInRun(LogicalDirection.Forward);
-                        TextPointer next = pointer.GetPositionAtOffset(text.Length);
+                        TextPointer next = pointer.GetPositionAtOffset(1, LogicalDirection.Forward);
+
+                        if (next == null || next.CompareTo(end) > 0)
+                            next = end;
 
                         // Create a range over this text segment
                         TextRange range = new TextRange(pointer, next);
@@ -166,7 +169,10 @@ namespace Write
                 if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
                 {
                     string text = pointer.GetTextInRun(LogicalDirection.Forward);
-                    TextPointer next = pointer.GetPositionAtOffset(text.Length);
+                    TextPointer next = pointer.GetPositionAtOffset(1, LogicalDirection.Forward);
+
+                    if (next == null || next.CompareTo(end) > 0)
+                        next = end;
 
                     // Create a range over this text segment
                     TextRange range = new TextRange(pointer, next);
@@ -226,8 +232,6 @@ namespace Write
             TextPointer start = selectedText.Start;
             TextPointer end = selectedText.End;
 
-            Debug.WriteLine("El end es: " + selectedText.Text);
-
             TextPointer pointer = start;
 
             while (pointer != null && pointer.CompareTo(end) < 0)
@@ -235,7 +239,10 @@ namespace Write
                 if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
                 {
                     string text = pointer.GetTextInRun(LogicalDirection.Forward);
-                    TextPointer next = pointer.GetPositionAtOffset(text.Length);
+                    TextPointer next = pointer.GetPositionAtOffset(1, LogicalDirection.Forward);
+
+                    if (next == null || next.CompareTo(end) > 0)
+                        next = end;
 
                     // Create a range over this text segment
                     TextRange range = new TextRange(pointer, next);
@@ -267,35 +274,57 @@ namespace Write
             {
                 TextPointer start = selectedText.Start;
                 TextPointer end = selectedText.End;
-                TextRange range = new TextRange(start, end);
 
-                string change;
-                if (sender.Equals(cmdUpperCase))
-                    change = range.Text.ToUpper();
-                else
-                    change = range.Text.ToLower();
+                TextPointer pointer = start;                
 
-                if (change != null)
+                while (pointer != null && pointer.CompareTo(end) < 0)
                 {
-                    //Have to save the format
-                    var formatting = new
+                    if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
                     {
-                        FontSize = range.GetPropertyValue(TextElement.FontSizeProperty),
-                        FontWeight = range.GetPropertyValue(TextElement.FontWeightProperty),
-                        FontStyle = range.GetPropertyValue(TextElement.FontStyleProperty),
-                        Foreground = range.GetPropertyValue(TextElement.ForegroundProperty),
-                        FontFamily = range.GetPropertyValue(TextElement.FontFamilyProperty)
-                    };
-                
-                    range.Text = change;
+                        string text = pointer.GetTextInRun(LogicalDirection.Forward);
+                        TextPointer next = pointer.GetPositionAtOffset(1, LogicalDirection.Forward);
 
-                    //Paste the format
-                    range.ApplyPropertyValue(TextElement.FontSizeProperty, formatting.FontSize);
-                    range.ApplyPropertyValue(TextElement.FontWeightProperty, formatting.FontWeight);
-                    range.ApplyPropertyValue(TextElement.FontStyleProperty, formatting.FontStyle);
-                    range.ApplyPropertyValue(TextElement.ForegroundProperty, formatting.Foreground);
-                    range.ApplyPropertyValue(TextElement.FontFamilyProperty, formatting.FontFamily);
-                }
+                        if (next == null || next.CompareTo(end) > 0)
+                            next = end;
+
+                        // Create a range over this text segment
+                        TextRange range = new TextRange(pointer, next);
+
+                        string change;
+                        if (sender.Equals(cmdUpperCase))
+                            change = range.Text.ToUpper();
+                        else
+                            change = range.Text.ToLower();
+
+                        if (change != null)
+                        {
+                            //Have to save the format
+                            var formatting = new
+                            {
+                                FontSize = range.GetPropertyValue(TextElement.FontSizeProperty),
+                                FontWeight = range.GetPropertyValue(TextElement.FontWeightProperty),
+                                FontStyle = range.GetPropertyValue(TextElement.FontStyleProperty),
+                                Foreground = range.GetPropertyValue(TextElement.ForegroundProperty),
+                                FontFamily = range.GetPropertyValue(TextElement.FontFamilyProperty)
+                            };
+
+                            range.Text = change;
+
+                            //Paste the format
+                            range.ApplyPropertyValue(TextElement.FontSizeProperty, formatting.FontSize);
+                            range.ApplyPropertyValue(TextElement.FontWeightProperty, formatting.FontWeight);
+                            range.ApplyPropertyValue(TextElement.FontStyleProperty, formatting.FontStyle);
+                            range.ApplyPropertyValue(TextElement.ForegroundProperty, formatting.Foreground);
+                            range.ApplyPropertyValue(TextElement.FontFamilyProperty, formatting.FontFamily);
+                        }
+
+                        pointer = next;
+                    }
+                    else
+                    {
+                        pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
+                    }
+                }                
             }
         }                       
     }
