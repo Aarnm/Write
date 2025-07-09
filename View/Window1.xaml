@@ -16,23 +16,28 @@
         <!-- Menu -->
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="2"/>
+                <RowDefinition Height="17"/>
                 <RowDefinition Height="2"/>
                 <RowDefinition Height="2"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="2"/>
             </Grid.RowDefinitions>
-            <Menu>
-                <MenuItem Header="File" FontSize="14">
+            <Rectangle Fill="#f0f0f0"/>
+            <Menu Grid.Row="1">
+                <MenuItem Header="File" FontSize="14" FontFamily="MS Gothic">
 
                 </MenuItem>
-                <MenuItem Header="Edit" FontSize="14">
+                <MenuItem Header="Edit" FontSize="14" FontFamily="MS Gothic">
+
+                </MenuItem>
+                <MenuItem Header="References" FontSize="14" FontFamily="MS Gothic">
 
                 </MenuItem>
             </Menu>
-            <Rectangle Grid.Row="1" Fill="#FF404040"/>
             <Rectangle Grid.Row="2" Fill="Gray"/>
-            <Grid Grid.Row="3">
+            <Rectangle Grid.Row="3" Fill="Gray"/>
+            <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="110"/>
@@ -108,9 +113,11 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="B" FontFamily="MS Gothic" FontWeight="Bold" Focusable="False"/>
-                    <Button Grid.Column="1" Content="I" FontFamily="MS Gothic" FontStyle="Italic" Focusable="False"/>
-                    <Button Grid.Column="2" Content="U" FontFamily="MS Gothic" Focusable="False"/>
+                    <Button Name="cmdBoldText" Grid.Column="0" Content="B" FontFamily="MS Gothic" FontWeight="Bold" Focusable="False" Click="cmdBoldText_Click"/>
+                    <Button Name="cmdItalicText" Grid.Column="1" Content="I" FontFamily="MS Gothic" FontStyle="Italic" Focusable="False" Click="cmdItalicText_Click"/>
+                    <Button Name="cmdSubText" Grid.Column="2" FontFamily="MS Gothic" Focusable="False" Click="cmdSubText_Click">
+                        <TextBlock Text="U" FontFamily="MS Gothic" TextDecorations="Underline" />
+                    </Button>
                 </Grid>
 
                 <Grid Grid.Column="11">
@@ -124,7 +131,7 @@
                     <Button Grid.Column="2" Content=">" FontFamily="MS Gothic" Focusable="False"/>
                 </Grid>
             </Grid>
-            <Rectangle Grid.Row="4" Fill="Gray"/>
+            <Rectangle Grid.Row="5" Fill="Gray"/>
         </Grid>
 
         <!-- Texto -->

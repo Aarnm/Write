@@ -326,6 +326,126 @@ namespace Write
                     }
                 }                
             }
-        }                       
+        }
+
+        //Bold cmd
+        private void cmdBoldText_Click(object sender, RoutedEventArgs e)
+        {
+            if (!selectedText.IsEmpty)
+            {
+                TextPointer start = selectedText.Start;
+                TextPointer end = selectedText.End;
+
+                TextPointer pointer = start;
+
+                while (pointer != null && pointer.CompareTo(end) < 0)
+                {
+                    if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                    {
+                        string text = pointer.GetTextInRun(LogicalDirection.Forward);
+                        TextPointer next = pointer.GetPositionAtOffset(1, LogicalDirection.Forward);
+
+                        if (next == null || next.CompareTo(end) > 0)
+                            next = end;
+
+                        // Create a range over this text segment
+                        TextRange range = new TextRange(pointer, next);
+
+                        object weight = range.GetPropertyValue(TextElement.FontWeightProperty);
+
+                        if (!weight.Equals(FontWeights.Bold))
+                            range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);                            
+                        else                            
+                            range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Normal);
+
+                        Debug.WriteLine(range.GetPropertyValue(TextElement.FontWeightProperty));
+
+                        pointer = next;
+                    }
+                    else
+                    {
+                        pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
+                    }
+                }
+            }
+        }
+
+        private void cmdItalicText_Click(object sender, RoutedEventArgs e)
+        {
+            TextPointer start = selectedText.Start;
+            TextPointer end = selectedText.End;
+
+            TextPointer pointer = start;
+
+            while (pointer != null && pointer.CompareTo(end) < 0)
+            {
+                if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                {
+                    string text = pointer.GetTextInRun(LogicalDirection.Forward);
+                    TextPointer next = pointer.GetPositionAtOffset(1, LogicalDirection.Forward);
+
+                    if (next == null || next.CompareTo(end) > 0)
+                        next = end;
+
+                    // Create a range over this text segment
+                    TextRange range = new TextRange(pointer, next);
+
+                    object weight = range.GetPropertyValue(TextElement.FontStyleProperty);
+
+                    if (!weight.Equals(FontStyles.Italic))                    
+                        range.ApplyPropertyValue(TextElement.FontStyleProperty, FontStyles.Italic);                    
+                    else                    
+                        range.ApplyPropertyValue(TextElement.FontStyleProperty, FontStyles.Normal);                    
+
+                    pointer = next;
+                }
+                else
+                {
+                    pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
+                }
+            }        
+        }
+
+        private void cmdSubText_Click(object sender, RoutedEventArgs e)
+        {
+            TextPointer start = selectedText.Start;
+            TextPointer end = selectedText.End;
+
+            TextPointer pointer = start;
+
+            while (pointer != null && pointer.CompareTo(end) < 0)
+            {
+                if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                {
+                    string text = pointer.GetTextInRun(LogicalDirection.Forward);
+                    TextPointer next = pointer.GetPositionAtOffset(1, LogicalDirection.Forward);
+
+                    if (next == null || next.CompareTo(end) > 0)
+                        next = end;
+
+                    // Create a range over this text segment
+                    TextRange range = new TextRange(pointer, next);
+
+                    object weight = range.GetPropertyValue(Inline.TextDecorationsProperty);
+
+                    if (!weight.Equals(TextDecorations.Baseline))
+                    {
+                        range.ApplyPropertyValue(Inline.TextDecorationsProperty, TextDecorations.Baseline);
+                    }
+                    else
+                    {
+                        range.ApplyPropertyValue(Inline.TextDecorationsProperty, null);
+                    }
+
+                    Debug.WriteLine(range.GetPropertyValue(TextElement.FontWeightProperty));
+
+                    pointer = next;
+                }
+                else
+                {
+                    pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
+                }
+            }
+        }
     }
 }
