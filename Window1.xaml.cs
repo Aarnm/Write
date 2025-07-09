@@ -114,8 +114,8 @@ namespace Write
         {
             if (!selectedText.IsEmpty)
             {
-                TextPointer start = txtText.Selection.Start;
-                TextPointer end = txtText.Selection.End;
+                TextPointer start = selectedText.Start;
+                TextPointer end = selectedText.End;
 
                 TextPointer pointer = start;
 
@@ -156,8 +156,8 @@ namespace Write
         //Button Minus Sizes
         private void cmdMinusFont_Click(object sender, RoutedEventArgs e)
         {
-            TextPointer start = txtText.Selection.Start;
-            TextPointer end = txtText.Selection.End;
+            TextPointer start = selectedText.Start;
+            TextPointer end = selectedText.End;
 
             TextPointer pointer = start;
 
@@ -223,8 +223,10 @@ namespace Write
         //Colors
         private void cmdColorChange_Click(object sender, RoutedEventArgs e)
         {
-            TextPointer start = txtText.Selection.Start;
-            TextPointer end = txtText.Selection.End;
+            TextPointer start = selectedText.Start;
+            TextPointer end = selectedText.End;
+
+            Debug.WriteLine("El end es: " + selectedText.Text);
 
             TextPointer pointer = start;
 
@@ -247,15 +249,6 @@ namespace Write
                     else if (sender.Equals(cmdColorRed))
                         color = new SolidColorBrush(Colors.Red);
 
-                    //if (color != DependencyProperty.UnsetValue)
-                    //{
-                    //    size -= 2;
-                    //}
-                    //else
-                    //{
-                    //    size = 1;
-                    //}
-
                     range.ApplyPropertyValue(TextElement.ForegroundProperty, color);
 
                     pointer = next;
@@ -266,5 +259,44 @@ namespace Write
                 }
             }
         }
+
+        //UpperCase cmd
+        private void cmdUpperLower_Click(object sender, RoutedEventArgs e)
+        {
+            if (!selectedText.IsEmpty)
+            {
+                TextPointer start = selectedText.Start;
+                TextPointer end = selectedText.End;
+                TextRange range = new TextRange(start, end);
+
+                string change;
+                if (sender.Equals(cmdUpperCase))
+                    change = range.Text.ToUpper();
+                else
+                    change = range.Text.ToLower();
+
+                if (change != null)
+                {
+                    //Have to save the format
+                    var formatting = new
+                    {
+                        FontSize = range.GetPropertyValue(TextElement.FontSizeProperty),
+                        FontWeight = range.GetPropertyValue(TextElement.FontWeightProperty),
+                        FontStyle = range.GetPropertyValue(TextElement.FontStyleProperty),
+                        Foreground = range.GetPropertyValue(TextElement.ForegroundProperty),
+                        FontFamily = range.GetPropertyValue(TextElement.FontFamilyProperty)
+                    };
+                
+                    range.Text = change;
+
+                    //Paste the format
+                    range.ApplyPropertyValue(TextElement.FontSizeProperty, formatting.FontSize);
+                    range.ApplyPropertyValue(TextElement.FontWeightProperty, formatting.FontWeight);
+                    range.ApplyPropertyValue(TextElement.FontStyleProperty, formatting.FontStyle);
+                    range.ApplyPropertyValue(TextElement.ForegroundProperty, formatting.Foreground);
+                    range.ApplyPropertyValue(TextElement.FontFamilyProperty, formatting.FontFamily);
+                }
+            }
+        }                       
     }
 }

@@ -98,8 +98,8 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="A" FontFamily="MS Gothic" Focusable="False"/>
-                    <Button Grid.Column="1" Content="a" FontFamily="MS Gothic" Focusable="False"/>
+                    <Button Name="cmdUpperCase" Grid.Column="0" Content="A" FontFamily="MS Gothic" Click="cmdUpperLower_Click" Focusable="False"/>
+                    <Button Name="cmdLowerCase" Grid.Column="1" Content="a" FontFamily="MS Gothic" Click="cmdUpperLower_Click" Focusable="False"/>
                 </Grid>
 
                 <Grid Grid.Column="9">
