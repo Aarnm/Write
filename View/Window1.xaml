@@ -8,7 +8,7 @@
         Title="Window1" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="46"/>
+            <RowDefinition Height="47"/>
             <RowDefinition/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
@@ -20,24 +20,26 @@
                 <RowDefinition Height="17"/>
                 <RowDefinition Height="2"/>
                 <RowDefinition Height="2"/>
+                <RowDefinition Height="2"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="2"/>
             </Grid.RowDefinitions>
-            <Rectangle Fill="#f0f0f0"/>
-            <Menu Grid.Row="1">
-                <MenuItem Header="File" FontSize="14" FontFamily="MS Gothic">
+            <Rectangle Fill="#898989"/>
+            <Menu Grid.Row="1" Background="#898989">
+                <MenuItem Header="File" FontSize="14" FontFamily="MS Gothic" Foreground="White" Height="17">
 
                 </MenuItem>
-                <MenuItem Header="Edit" FontSize="14" FontFamily="MS Gothic">
+                <MenuItem Header="Edit" FontSize="14" FontFamily="MS Gothic" Foreground="White">
 
                 </MenuItem>
-                <MenuItem Header="References" FontSize="14" FontFamily="MS Gothic">
+                <MenuItem Header="References" FontSize="14" FontFamily="MS Gothic" Foreground="White">
 
                 </MenuItem>
             </Menu>
-            <Rectangle Grid.Row="2" Fill="Gray"/>
-            <Rectangle Grid.Row="3" Fill="Gray"/>
-            <Grid Grid.Row="4">
+            <Rectangle Grid.Row="2" Fill="#898989"/>
+            <Rectangle Grid.Row="3" Fill="#292929"/>
+            <Rectangle Grid.Row="4" Fill="#898989"/>
+            <Grid Grid.Row="5" Background="#898989">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="110"/>
@@ -53,19 +55,19 @@
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition MinWidth="10" MaxWidth="1000000"/>
                 </Grid.ColumnDefinitions>
-                <Rectangle Grid.Column="0" Fill="Gray"/>
-                <Rectangle Grid.Column="1" Fill="blue"/>
-                <Rectangle Grid.Column="2" Fill="Gray"/>
-                <Rectangle Grid.Column="3" Fill="blue"/>
-                <Rectangle Grid.Column="4" Fill="Gray"/>
-                <Rectangle Grid.Column="5" Fill="blue"/>
-                <Rectangle Grid.Column="6" Fill="Gray"/>
-                <Rectangle Grid.Column="7" Fill="blue"/>
-                <Rectangle Grid.Column="8" Fill="Gray"/>
-                <Rectangle Grid.Column="9" Fill="blue"/>
-                <Rectangle Grid.Column="10" Fill="Gray"/>
-                <Rectangle Grid.Column="11" Fill="blue"/>
-                <Rectangle Grid.Column="12" Fill="Gray"/>
+                <Rectangle Grid.Column="0" />
+                <Rectangle Grid.Column="1" />
+                <Rectangle Grid.Column="2" />
+                <Rectangle Grid.Column="3" />
+                <Rectangle Grid.Column="4" />
+                <Rectangle Grid.Column="5" />
+                <Rectangle Grid.Column="6" />
+                <Rectangle Grid.Column="7" />
+                <Rectangle Grid.Column="8" />
+                <Rectangle Grid.Column="9" />
+                <Rectangle Grid.Column="10" />
+                <Rectangle Grid.Column="11" />
+                <Rectangle Grid.Column="12" />
 
                 <ComboBox Name="cmbFont" Grid.Column="1" SelectedIndex="0" FontFamily="MS Gothic" SelectionChanged="cmbFont_SelectionChanged" Focusable="False">
                     <Label Content="MS Gothic" FontFamily="MS Gothic"/>
@@ -73,7 +75,7 @@
                     <Label Content="Calibri Light" FontFamily="Calibri Light"/>                    
                 </ComboBox>
 
-                <Grid Grid.Column="5">
+                <Grid Grid.Column="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40"/>
                         <ColumnDefinition/>
@@ -85,7 +87,7 @@
                 </Grid>
                 
 
-                <Grid Grid.Column="3">
+                <Grid Grid.Column="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
@@ -131,11 +133,11 @@
                     <Button Grid.Column="2" Content=">" FontFamily="MS Gothic" Focusable="False"/>
                 </Grid>
             </Grid>
-            <Rectangle Grid.Row="5" Fill="Gray"/>
+            <Rectangle Grid.Row="6" Fill="#898989"/>
         </Grid>
 
         <!-- Texto -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Background="#5b5b5b">     
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                 <Grid>
                     <Grid.ColumnDefinitions>
