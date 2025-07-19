@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,62 +14,87 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static Write.MainWindow;
 
 namespace Write
 {
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class FileText : Window
     {
-        TextSelection selectedText;
-        public Window1()
+        private TextSelection selectedText;
+
+        private string projectZipPath;
+        private string internalFile;
+
+        public FileText(string projectZipPath, string internalFile)
         {
             InitializeComponent();
-
+            
+            this.projectZipPath = projectZipPath;
+            this.internalFile = internalFile;
             selectedText = txtText.Selection;
             txtFontSize.Text = txtText.FontSize.ToString();
+
+            LoadText();
         }
 
-        //private void IncreaseSelectedFontSizes(double amount)
-        //{
-        //    TextPointer start = txtText.Selection.Start;
-        //    TextPointer end = txtText.Selection.End;
+        private void LoadText()
+        {
+            using (var zip = ZipFile.Open(projectZipPath, ZipArchiveMode.Read))
+            {
+                var entry = zip.GetEntry(internalFile);
 
-        //    TextPointer pointer = start;
+                if (entry != null)
+                {
+                    using (var stream = entry.Open())
+                    {
+                        TextRange range = new TextRange(txtText.Document.ContentStart, txtText.Document.ContentEnd);
+                        try
+                        {
+                            range.Load(stream, DataFormats.XamlPackage);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error: " + ex.Message);
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The text didn't exist.");
+                }
+            }
+        }
 
-        //    while (pointer != null && pointer.CompareTo(end) < 0)
-        //    {
-        //        if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
-        //        {
-        //            string text = pointer.GetTextInRun(LogicalDirection.Forward);
-        //            TextPointer next = pointer.GetPositionAtOffset(text.Length);
+        private void cmdSaveFile_Click(object sender, RoutedEventArgs e)
+        {
+            string temp = System.IO.Path.GetTempFileName();
+            File.Copy(projectZipPath, temp, true);
 
-        //            // Create a range over this text segment
-        //            TextRange range = new TextRange(pointer, next);
+            using (var zip = ZipFile.Open(temp, ZipArchiveMode.Update))
+            {
+                //Delete old entry
+                zip.GetEntry(internalFile)?.Delete();
 
-        //            object currentSize = range.GetPropertyValue(TextElement.FontSizeProperty);
-        //            double size;
+                //Create entry in zip
+                var entry = zip.CreateEntry(internalFile);
+                using (var entryStream = entry.Open())
+                {                    
+                    TextRange textRange = new TextRange(txtText.Document.ContentStart, txtText.Document.ContentEnd);
+                    textRange.Save(entryStream, DataFormats.XamlPackage);
+                }
+            }
 
-        //            if (currentSize != DependencyProperty.UnsetValue && double.TryParse(currentSize.ToString(), out size))
-        //            {
-        //                size += amount;                        
-        //            }
-        //            else
-        //            {
-        //                size = 12;
-        //            }
+            //Replace original zip
+            File.Copy(temp, projectZipPath, true);
+            File.Delete(temp);
 
-        //            range.ApplyPropertyValue(TextElement.FontSizeProperty, size);
+            Console.WriteLine("Save done!");
 
-        //            pointer = next;
-        //        }
-        //        else
-        //        {
-        //            pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
-        //        }
-        //    }
-        //}
+            //Poner algo para mostar que se a guardado, usar linea de abajo?
+        }
 
         private void txtText_LostFocus(object sender, RoutedEventArgs e)
         {

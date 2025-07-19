@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.IO.Compression;
+using System.Text;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,10 +24,93 @@ namespace Write
             InitializeComponent();            
         }
 
+        public class ProjectData
+        {
+            public string name { get; set; }
+            public List<string> texts { get; set; } = new();
+            public List<Reference> references { get; set; } = new();
+        }
+
+        public class Reference
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public string definition { get; set; }
+            public List<string> targets { get; set; } = new();
+        }
+
+        public class ProjectWindows
+        {
+            public string textContent { get; set; }
+        }
+
+        //Change . and filter
         private void cmdCreate_Click(object sender, RoutedEventArgs e)
         {
-            Window1 win1 = new Window1();
-            win1.Show();
-        }        
+            var saveDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "Proyecto MyWriter (*.myprojz)|*.myprojz",
+                DefaultExt = ".myprojz"
+            };
+
+            if (saveDialog.ShowDialog() == true)
+            {
+                string path = saveDialog.FileName;
+
+                using (FileStream zipToOpen = new(path, FileMode.Create))
+                using (ZipArchive archive = new(zipToOpen, ZipArchiveMode.Create))
+                {
+                    var project = new ProjectData
+                    {
+                        name = System.IO.Path.GetFileNameWithoutExtension(path)
+                    };
+
+                    var json = JsonSerializer.Serialize(project, new JsonSerializerOptions { WriteIndented = true });
+                    var entry = archive.CreateEntry("project.json");
+                    using (var writer = new StreamWriter(entry.Open()))
+                    {
+                        writer.Write(json);
+                    }
+
+                    archive.CreateEntry("texts/");
+                }
+
+                Console.WriteLine("Project created!");
+
+                ShowProject(path);                
+            }
+        }
+
+        //Change . and filter
+        private void cmdLoad_Click(object sender, RoutedEventArgs e)
+        {
+            var openDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Proyecto MyWriter (*.myprojz)|*.myprojz"
+            };
+
+            if (openDialog.ShowDialog() == true)
+            {
+                ShowProject(openDialog.FileName);
+            }
+        }
+
+        private void ShowProject(string path)
+        {
+            //string path = oPath.FileName;
+
+            MessageBox.Show(path);
+
+            using ZipArchive archive = ZipFile.OpenRead(path);
+            var entry = archive.GetEntry("project.json");
+
+            using var reader = new StreamReader(entry.Open());
+            string json = reader.ReadToEnd();
+            ProjectData project = JsonSerializer.Deserialize<ProjectData>(json);
+
+            // Abrir ventana del proyecto y pasarle path + project
+            var projectWindow = new ProjectWindow(path, project);
+            projectWindow.Show();
+        }
     }
 }
