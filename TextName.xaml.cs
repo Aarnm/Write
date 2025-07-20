@@ -29,6 +29,7 @@ namespace Write
         {
             InitializeComponent();
             this.pw = pw;
+            txtName.Focus();
         }        
 
         private void cmdConfirm_Click(object sender, RoutedEventArgs e)
@@ -46,10 +47,21 @@ namespace Write
         private void AddTextFile(ProjectData project, string zipPath, string fileName)
         {
             string tempZip = System.IO.Path.GetTempFileName();
-            File.Copy(zipPath, tempZip, true);
+            File.Copy(zipPath, tempZip, true);                       
 
             using (var zip = ZipFile.Open(tempZip, ZipArchiveMode.Update))
-            {
+            {                                
+                foreach (var entryConfirm in zip.Entries)
+                {
+                    //Only in "texts/" folder
+                    if (entryConfirm.FullName.StartsWith("texts/", StringComparison.OrdinalIgnoreCase) &&
+                        System.IO.Path.GetFileNameWithoutExtension(entryConfirm.FullName).Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        MessageBox.Show("There is a file with that name!");
+                        return;
+                    }
+                }
+
                 var entry = zip.CreateEntry($"texts/{fileName}");
 
                 using (var entryStream = entry.Open())
@@ -58,6 +70,12 @@ namespace Write
                     TextRange textRange = new TextRange(doc.ContentStart, doc.ContentEnd);
                     textRange.Save(entryStream, DataFormats.XamlPackage);
                 }
+
+                //FileWithText ft = new FileWithText
+                //{
+                //    name = fileName,
+                //    content = ""
+                //};
 
                 project.texts.Add($"texts/{fileName}");
 

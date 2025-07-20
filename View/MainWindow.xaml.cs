@@ -28,7 +28,15 @@ namespace Write
         {
             public string name { get; set; }
             public List<string> texts { get; set; } = new();
-            public List<Reference> references { get; set; } = new();
+            public List<Reference> references { get; set; } = new();            
+            public List<string> trash { get; set; } = new();
+        }
+
+        public class FileWithText
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public string content { get; set; }            
         }
 
         public class Reference
@@ -73,6 +81,7 @@ namespace Write
                     }
 
                     archive.CreateEntry("texts/");
+                    archive.CreateEntry("trash/");
                 }
 
                 Console.WriteLine("Project created!");
