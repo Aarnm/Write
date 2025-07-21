@@ -27,16 +27,18 @@ namespace Write
         public class ProjectData
         {
             public string name { get; set; }
-            public List<string> texts { get; set; } = new();
-            public List<Reference> references { get; set; } = new();            
-            public List<string> trash { get; set; } = new();
+            public List<FileWithText> texts { get; set; } = new();
+            public List<Reference> references { get; set; } = new();
+            public List<FileWithText> trash { get; set; } = new();
         }
 
         public class FileWithText
-        {
-            public int id { get; set; }
+        {            
             public string name { get; set; }
-            public string content { get; set; }            
+            public string content { get; set; }    
+            public bool isDelete { get; set; }
+            public string modified { get; set; }
+            public string created { get; set; }            
         }
 
         public class Reference
@@ -44,7 +46,7 @@ namespace Write
             public int id { get; set; }
             public string name { get; set; }
             public string definition { get; set; }
-            public List<string> targets { get; set; } = new();
+            public List<string> targets { get; set; } = new();            
         }
 
         public class ProjectWindows

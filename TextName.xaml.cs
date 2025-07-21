@@ -70,14 +70,15 @@ namespace Write
                     TextRange textRange = new TextRange(doc.ContentStart, doc.ContentEnd);
                     textRange.Save(entryStream, DataFormats.XamlPackage);
                 }
+                
+                FileWithText ft = new FileWithText
+                {
+                    name = fileName,
+                    content = "",
+                    isDelete = false
+                };
 
-                //FileWithText ft = new FileWithText
-                //{
-                //    name = fileName,
-                //    content = ""
-                //};
-
-                project.texts.Add($"texts/{fileName}");
+                project.texts.Add(ft);
 
                 zip.GetEntry("project.json")?.Delete();
                 var newJson = zip.CreateEntry("project.json");

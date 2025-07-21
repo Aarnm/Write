@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -24,7 +25,8 @@ namespace Write
     public partial class ProjectWindow : Window
     {
         public string projectZipPath;
-        public ProjectData project;        
+        public ProjectData project;
+        public string fileType = "Texts"; // Valor por defecto
 
         public ProjectWindow(string projectZipPath, ProjectData project)
         {
@@ -33,44 +35,51 @@ namespace Write
             this.projectZipPath = projectZipPath;
             this.project = project;
 
-            lblNameProject.Text = project.name;
+            //lblNameProject.Text = project.name;
             LoadFilesInProject();
         }
 
         public void LoadFilesInProject()
         {
             lstFiles.Items.Clear();
-            foreach (string file in project.texts)
+            foreach (var file in project.texts)
             {
-                lstFiles.Items.Add(System.IO.Path.GetFileNameWithoutExtension(file));
+                var info = new FileInfo(file.name);
+                lstFiles.Items.Add(new FileWithText
+                {
+                    name = info.Name,
+                    modified = info.LastWriteTime.ToString("g"),
+                    created = info.CreationTime.ToString("g")
+                });
             }
         }
 
         private void cmdOpenFile_Click(object sender, RoutedEventArgs e)
         {
-            if (lstFiles.SelectedItem is string fileName)
+            if (lstFiles.SelectedItem is FileWithText fileName)
             {
-                string fullInternalPath = $"texts/{fileName}.mytext";
+                string fullInternalPath = $"texts/{fileName.name}.mytext";
 
                 FileText fText = new FileText(projectZipPath, fullInternalPath);
-                
+
                 fText.Show();
             }
         }
 
         private void cmdNewFile_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             TextName tN = new TextName(this);
-            tN.Show();            
+            tN.Show();
         }
 
         private void cmdDelete_Click(object sender, RoutedEventArgs e)
-        {            
+        {
+            FileWithText ft = new FileWithText();
             if (lstFiles.SelectedItem is string fileName)
-            {
-                DeleteTextFile(projectZipPath, $"{fileName}");
+            {                              
+                MoveToTrash(project, projectZipPath, $"{fileName}");
                 LoadFilesInProject();
-            }            
+            }
         }
 
         private void cmdReaload_Click(object sender, RoutedEventArgs e)
@@ -95,13 +104,15 @@ namespace Write
                     return;
                 }
 
-                // Copiar contenido a nueva entrada en trash/
-                using var originalStream = entry.Open();
                 var memoryStream = new MemoryStream();
-                originalStream.CopyTo(memoryStream);
-                memoryStream.Position = 0;
+                // Copiar contenido a nueva entrada en trash/
+                using (var originalStream = entry.Open())
+                {                    
+                    originalStream.CopyTo(memoryStream);
+                    memoryStream.Position = 0;
+                }
 
-                // Eliminar entrada original
+                // Eliminar entrada original              
                 entry.Delete();
 
                 // Crear nueva entrada en trash/
@@ -110,11 +121,12 @@ namespace Write
                 memoryStream.CopyTo(trashStream);
 
                 // Actualizar el JSON: quitar de texts y poner en trash
-                var item = project.texts.FirstOrDefault(t => t == fileName);
+                var item = project.texts.FirstOrDefault(t => t.name == fileName);
                 if (item != null)
                 {
                     project.texts.Remove(item);
                     //project.trash ??= new List<String>();
+                    item.isDelete = true;
                     project.trash.Add(item);
                 }
 
@@ -129,15 +141,15 @@ namespace Write
             File.Delete(tempZip);
         }
 
-
         private void DeleteTextFile(string projectZipPath, string fileToDelete)
         {
             string tempZipPath = System.IO.Path.GetTempFileName();
 
             //Delete the fileText in the project
-            project.texts.RemoveAll(t => 
-                string.Equals(System.IO.Path.GetFileNameWithoutExtension(t), fileToDelete, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(t, $"texts/{fileToDelete}.mytext", StringComparison.OrdinalIgnoreCase));
+            project.texts.RemoveAll(t =>
+                !t.isDelete &&
+                (string.Equals(System.IO.Path.GetFileNameWithoutExtension(t.name), fileToDelete, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(t.name, $"texts/{fileToDelete}.mytext", StringComparison.OrdinalIgnoreCase)));
 
             using (var originalZip = ZipFile.OpenRead(projectZipPath))
             using (var tempZip = ZipFile.Open(tempZipPath, ZipArchiveMode.Update))
@@ -147,7 +159,7 @@ namespace Write
                     //Modify the zip
                     if (!entry.FullName.Equals($"texts/{fileToDelete}.mytext", StringComparison.OrdinalIgnoreCase)
                         && !entry.FullName.Equals("project.json", StringComparison.OrdinalIgnoreCase)
-                        && !System.IO.Path.GetFileNameWithoutExtension(entry.FullName).Equals(fileToDelete, StringComparison.OrdinalIgnoreCase))
+                        && !System.IO.Path.GetFileNameWithoutExtension(entry.FullName).Equals(fileToDelete, StringComparison.OrdinalIgnoreCase))                        
                     {
                         using var input = entry.Open();
                         var newEntry = tempZip.CreateEntry(entry.FullName);
@@ -163,15 +175,22 @@ namespace Write
             }
 
             File.Delete(projectZipPath);
-            File.Move(tempZipPath, projectZipPath);
+            File.Move(tempZipPath, projectZipPath);                
+        }
 
-            using (var zip = ZipFile.OpenRead(projectZipPath))
+        private void tcmdFiles_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is ToggleButton checkedButton)
             {
-                foreach(var entry in zip.Entries)
+                foreach (var btn in new[] { tcmdFileText, tcmdReferences, tcmdTrash })
                 {
-                    MessageBox.Show(entry.FullName);
+                    if (btn != checkedButton)
+                        btn.IsChecked = false;
                 }
-            }       
+                
+                if (checkedButton.Tag is string tag)
+                    fileType = tag;
+            }
         }
     }
 }
